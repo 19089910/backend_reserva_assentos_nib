@@ -1,5 +1,6 @@
 import express from 'express'
 import router from './routes'
+import './database' // Isso inicializa a conexão com o banco de dados
 
 class App {
   constructor() {
@@ -7,9 +8,11 @@ class App {
     this.middlewares()
     this.routes()
   }
+
   middlewares() {
     this.app.use(express.json())
   }
+
   routes() {
     this.app.use(router)
   }
