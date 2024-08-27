@@ -27,10 +27,8 @@ class UserController {
     const userExists = await User.findOne({
       where: { email },
     })
-
     if (userExists) {
       return response.status(409).json({ error: 'User already existe' })
-      // perga via body do front
     }
 
     // manda para o model User e ainda armazena em variavel user
