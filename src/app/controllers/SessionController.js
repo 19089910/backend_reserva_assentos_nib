@@ -1,5 +1,5 @@
 import * as Yup from 'yup'
-import User from '../models/User'
+import User from '../schemas/User'
 
 class SessionController {
   async store(request, response) {
@@ -21,13 +21,12 @@ class SessionController {
     const { email, password } = request.body
 
     // Verifica se o usuário existe e verifica a senha
-    const userExists = await User.findOne({
-      where: { email },
-    })
+    // O método findOne do Mongoose não utiliza where. Apenas passe o objeto de consulta diretamente.
+    const userExists = await User.findOne({ email })
     if (!userExists) {
       return userEmailOrPasswordIncorrect()
     }
-    if (!(await userExists.checkPassword(password))) {
+    if (!(await userExists.comparePassword(password))) {
       return userEmailOrPasswordIncorrect()
     }
 

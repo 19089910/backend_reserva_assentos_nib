@@ -15,7 +15,7 @@ class UserController {
       admin: Yup.boolean(),
     })
     try {
-      await schema.validateSync(request.body, { abortEarly: false })
+      await schema.validate(request.body, { abortEarly: false })
     } catch (err) {
       const validationErrors = err.errors || err.inner.map((e) => e.message)
       return response.status(400).json({ error: validationErrors })
@@ -24,9 +24,8 @@ class UserController {
     const { name, email, password, admin } = request.body
 
     // Verificar se o usuário já existe
-    const userExists = await User.findOne({
-      where: { email },
-    })
+    // O método findOne do Mongoose não utiliza where. Apenas passe o objeto de consulta diretamente.
+    const userExists = await User.findOne({ email })
     if (userExists) {
       return response.status(409).json({ error: 'User already existe' })
     }
