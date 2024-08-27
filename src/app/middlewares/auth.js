@@ -16,6 +16,7 @@ export default (request, response, next) => {
     jwt.verify(token, authConfig.secret, (err, decoded) => {
       if (err) throw new Error()
 
+      // vamos capturar essas infomrações na cração do controller/SeatController.js
       console.log(decoded)
       request.userId = decoded.id
       request.userName = decoded.name
