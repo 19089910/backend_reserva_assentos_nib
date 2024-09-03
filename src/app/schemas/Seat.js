@@ -1,8 +1,9 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
+import { v4 as uuidv4 } from 'uuid'
 
 const SeatSchema = new mongoose.Schema(
   {
-    seatId: { type: String, required: true, unique: true }, // Identificador único para cada assento
+    _id: { type: String, default: uuidv4 }, // Identificador único para cada assento
     user: {
       id: { type: String, requered: true },
       name: { type: String, requered: true },
@@ -22,5 +23,9 @@ const SeatSchema = new mongoose.Schema(
   },
   { timestamps: true },
 )
+/** garantir que a combinação de seatNumber e ShowDateTime seja única em cada documento.
+ * Isso evitaria reservas duplicadas de assentos para a mesma data.
+ */
+SeatSchema.index({ seatNumber: 1, ShowDateTime: 1 }, { unique: true })
 
 module.exports = mongoose.model('Seat', SeatSchema)

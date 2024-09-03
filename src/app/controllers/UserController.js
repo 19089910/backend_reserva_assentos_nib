@@ -32,7 +32,7 @@ class UserController {
 
     // manda para o model User e ainda armazena em variavel user
     const user = await User.create({
-      id: v4(),
+      _id: v4(),
       name,
       email,
       password,

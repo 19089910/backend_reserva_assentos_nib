@@ -17,7 +17,7 @@ export default (request, response, next) => {
       if (err) throw new Error()
 
       // vamos capturar essas infomrações na cração do controller/SeatController.js
-      console.log(decoded)
+      // console.log(decoded) user={ id: name: iat: exp: }
       request.userId = decoded.id
       request.userName = decoded.name
 

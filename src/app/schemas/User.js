@@ -1,7 +1,9 @@
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
+import { v4 as uuidv4 } from 'uuid'
 
 const UserSchema = new mongoose.Schema({
+  _id: { type: String, default: uuidv4 },
   name: { type: String, required: true },
   email: { type: String, required: true },
   password_hash: { type: String },
