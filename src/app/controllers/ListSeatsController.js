@@ -3,7 +3,6 @@ import * as Yup from 'yup'
 
 class ListSeatsController {
   async store(request, response) {
-    console.log('reservedSeats:', request.body)
     const schema = Yup.object().shape({
       seatNumber: Yup.array().required().of(Yup.string().required()),
       ShowDateTime: Yup.date().required(),
@@ -64,52 +63,25 @@ class ListSeatsController {
     }
   }
 
-  async update(request, response) {
-    const schema = Yup.object().shape({
-      seatNumber: Yup.array().of(Yup.string()),
-      ShowDateTime: Yup.date(),
-    })
-    try {
-      await schema.validateSync(request.body, { abortEarly: false })
-    } catch (err) {
-      const validationErrors = err.errors || err.inner.map((e) => e.message)
-      return response.status(400).json({ error: validationErrors })
-    }
-
+  async delete(request, response) {
     const { id: _id } = request.params
-    const { seatNumber, showDateTime } = request.body
+    try {
+      const seatOrder = await Seat.findById(_id)
+      if (!seatOrder) {
+        return response.status(404).json({ error: 'Reservation not found' })
+      }
 
-    // Validação se reserva ID existe
-    const reservationExists = await Seat.findById(_id)
-    if (!reservationExists) {
+      await Seat.findByIdAndDelete(_id)
+
       return response
-        .status(400)
-        .json({ error: 'Make sure your category ID is correct' })
+        .status(200)
+        .json({ message: 'Reservation deleted successfully' })
+    } catch (error) {
+      return response.status(500).json({
+        error: 'An error occurred while trying to delete the reservation',
+      })
     }
-
-    // Verifica assentos já está reservado
-    const reservedSeats = await Seat.findOne({
-      _id: { $ne: _id }, // Exclui a reserva atual da consulta
-      showDateTime,
-      seatNumber: { $in: seatNumber },
-    })
-    if (reservedSeats) {
-      return response
-        .status(400)
-        .json({ error: 'Some seats are already reserved.' })
-    }
-
-    // const updatedSeat = await Seat.updateOne(
-    // {
-    // seatNumber,
-    //      ShowDateTime,
-    //  },
-    //  { new: true }, // Retorna o documento atualizado
-    // )
-    return response.status(200).json(reservedSeats)
   }
-
-  async delete(request, response) {}
 }
 
 export default new ListSeatsController()

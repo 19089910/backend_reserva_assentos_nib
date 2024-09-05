@@ -14,6 +14,6 @@ router.get('/seats', ListSeatsController.index)
 // agora todos que tiverem a baixo disso vai passar primeiro pela validação
 router.use(authMiddleware)
 router.post('/seats', ListSeatsController.store)
-router.put('/seats/:id', ListSeatsController.update)
+router.delete('/seats/:id', ListSeatsController.delete)
 
 export default router
