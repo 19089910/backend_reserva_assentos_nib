@@ -1,3 +1,6 @@
+/**
+ *  will be discontinued by google signin
+ */
 import * as Yup from 'yup'
 import User from '../schemas/User'
 import jwt from 'jsonwebtoken'

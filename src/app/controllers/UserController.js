@@ -1,3 +1,6 @@
+/**
+ *  will be discontinued by google signin
+ */
 import { v4 } from 'uuid'
 import User from '../schemas/User'
 import * as Yup from 'yup'
