@@ -25,10 +25,8 @@ class AdminOperationsController {
         .required(),
     })
     try {
-      console.log(request.body) // Verificar se os dados estão chegando corretamente
       await schema.validateSync(request.body, { abortEarly: false })
     } catch (err) {
-      // console.log(err) // Verificar os erros completos do Yup
       const validationErrors = err.inner.map((e) => e.message)
       return response.status(400).json({ error: validationErrors })
     }
@@ -51,6 +49,25 @@ class AdminOperationsController {
     return response.status(200).json(showResponse)
   }
 
+  async index(request, response) {
+    try {
+      const shows = await Show.find() // Busca todas as informações do show
+      const showData = shows.map((show) => ({
+        _id: show._id,
+        showName: show.showName,
+        description: show.description,
+        bannerUrl: show.bannerUrl,
+        postUrl: show.postUrl,
+        dates: show.dates,
+        updatedAt: show.updatedAt,
+      }))
+      return response.status(200).json(showData)
+    } catch (error) {
+      return response.status(500).json({
+        error: 'CHAME O PROGRADOR URGENTE PQ NAO ERA PARA VOCE ESTA AQUI!!',
+      })
+    }
+  }
   // Aqui viriam as operações de PUT e DELETE que vamos implementar depois.
 }
 

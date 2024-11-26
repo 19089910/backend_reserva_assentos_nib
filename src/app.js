@@ -1,17 +1,19 @@
 import express from 'express'
 import router from './routes'
-import './database' // Isso inicializa a conexão com o banco de dados
+import cors from 'cors'
+
+import './database'
 
 class App {
   constructor() {
     this.app = express()
+    this.app.use(cors())
     this.middlewares()
     this.routes()
   }
 
   middlewares() {
     this.app.use(express.json())
-    this.app.use(express.urlencoded({ extended: true }))
   }
 
   routes() {

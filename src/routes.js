@@ -16,6 +16,8 @@ router.get('/seats', ListSeatsController.index)
 // router.use(authMiddleware)
 
 router.post('/shows', AdminOperationsController.store)
+router.get('/shows', AdminOperationsController.index)
+
 router.post('/seats', ListSeatsController.store)
 router.delete('/seats/:id', ListSeatsController.delete)
 
