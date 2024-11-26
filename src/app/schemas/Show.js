@@ -1,19 +1,43 @@
 import mongoose from 'mongoose'
 
+const SeatSchema = new mongoose.Schema({
+  seatNumber: {
+    type: String, // Exemplo: 'A1', 'B2'
+    required: true,
+  },
+  isAvailable: {
+    type: Boolean,
+    default: true,
+  },
+})
+
+const DateSchema = new mongoose.Schema({
+  showDateTime: {
+    type: Date,
+    required: true,
+  },
+  seats: [SeatSchema], // Lista de assentos para este horário
+})
+
 const ShowSchema = new mongoose.Schema(
   {
-    ShowName: {
+    showName: {
       type: String,
       required: true,
     },
-    ShowDateTime: {
-      type: Date,
+    description: {
+      type: String,
       required: true,
     },
-    seats: {
-      type: [String], // Lista de assentos disponíveis para o show
+    bannerUrl: {
+      type: String,
       required: true,
     },
+    postUrl: {
+      type: String,
+      required: true,
+    },
+    dates: [DateSchema], // Lista de horários com assentos
   },
   { timestamps: true },
 )

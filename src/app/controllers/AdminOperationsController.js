@@ -1,31 +1,50 @@
 import Show from '../schemas/Show.js'
-import User from '../schemas/User'
 import * as Yup from 'yup'
 
 class AdminOperationsController {
   async store(request, response) {
     const schema = Yup.object().shape({
-      ShowName: Yup.string().required(),
-      ShowDateTime: Yup.date().required(),
-      seats: Yup.array().required().of(Yup.string().required()), // Lista de assentos disponíveis
+      showName: Yup.string().required(),
+      description: Yup.string().required(),
+      bannerUrl: Yup.string().url().required(),
+      postUrl: Yup.string().url().required(),
+      dates: Yup.array()
+        .of(
+          Yup.object().shape({
+            showDateTime: Yup.date().required(),
+            seats: Yup.array()
+              .of(
+                Yup.object().shape({
+                  seatNumber: Yup.string().required(),
+                  isAvailable: Yup.boolean().required(),
+                }),
+              )
+              .required(),
+          }),
+        )
+        .required(),
     })
     try {
+      console.log(request.body) // Verificar se os dados estão chegando corretamente
       await schema.validateSync(request.body, { abortEarly: false })
     } catch (err) {
-      const validationErrors = err.errors || err.inner.map((e) => e.message)
+      // console.log(err) // Verificar os erros completos do Yup
+      const validationErrors = err.inner.map((e) => e.message)
       return response.status(400).json({ error: validationErrors })
     }
 
     // validação do administrador
-    const { admin: isAdmin } = await User.findByPk(request.userId)
-    if (!isAdmin) return response.status(401).json()
+    // const { admin: isAdmin } = await User.findByPk(request.userId)
+    // if (!isAdmin) return response.status(401).json()
 
-    const { ShowName, ShowDateTime, seats } = request.body
+    const { showName, description, bannerUrl, postUrl, dates } = request.body
 
     const show = {
-      ShowName,
-      ShowDateTime,
-      seats,
+      showName,
+      description,
+      bannerUrl,
+      postUrl,
+      dates,
     }
 
     const showResponse = await Show.create(show)
