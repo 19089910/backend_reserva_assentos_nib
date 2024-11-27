@@ -5,7 +5,6 @@ class ListSeatsController {
   async store(request, response) {
     const schema = Yup.object().shape({
       seatNumber: Yup.array().required().of(Yup.string().required()),
-      ShowDateTime: Yup.date().required(),
     })
     try {
       await schema.validateSync(request.body, { abortEarly: false })
@@ -14,16 +13,16 @@ class ListSeatsController {
       return response.status(400).json({ error: validationErrors })
     }
 
-    const { seatNumber, ShowDateTime } = request.body
+    const { seatNumber, time: showDateTime } = request.body
 
     // isso pode ser feito de várias maneiras (resumindo, vou fazer isso depois)
     // Aqui, por exemplo, estamos assumindo que o nome do show é fixo ou vem de outra lógica
-    const ShowName = 'Uma Aventura dos brinquedos'
+    const showName = 'Uma Aventura dos brinquedos'
 
     // Verifica assentos já está reservado
     const reservedSeats = await Seat.findOne({
-      ShowName,
-      ShowDateTime,
+      showName,
+      showDateTime,
       seatNumber: { $elemMatch: { $in: seatNumber } },
     })
     if (reservedSeats) {
@@ -38,8 +37,8 @@ class ListSeatsController {
         name: request.userName,
       },
       seatNumber,
-      ShowName,
-      ShowDateTime,
+      showName,
+      showDateTime,
     }
 
     const seatOrderResponse = await Seat.create(seatOrder)
@@ -52,7 +51,7 @@ class ListSeatsController {
       const seatData = seats.map((seat) => ({
         _id: seat._id,
         seatNumber: seat.seatNumber,
-        ShowDateTime: seat.ShowDateTime,
+        showDateTime: seat.showDateTime,
         updatedAt: seat.updatedAt,
       }))
       return response.status(200).json(seatData) // Retorna a lista de assentos

@@ -12,11 +12,11 @@ const SeatSchema = new mongoose.Schema(
       type: [String], // Array de strings representando assentos, ex: ["A1", "A2", "B3"]
       default: [],
     },
-    ShowName: {
+    showName: {
       type: String,
       required: true,
     },
-    ShowDateTime: {
+    showDateTime: {
       type: Date,
       required: true,
     },
@@ -26,6 +26,6 @@ const SeatSchema = new mongoose.Schema(
 /** garantir que a combinação de seatNumber e ShowDateTime seja única em cada documento.
  * Isso evitaria reservas duplicadas de assentos para a mesma data.
  */
-SeatSchema.index({ seatNumber: 1, ShowDateTime: 1 }, { unique: true })
+SeatSchema.index({ seatNumber: 1, showDateTime: 1 }, { unique: true })
 
 module.exports = mongoose.model('Seat', SeatSchema)
