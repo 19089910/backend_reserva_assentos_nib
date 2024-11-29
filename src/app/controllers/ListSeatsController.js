@@ -13,7 +13,7 @@ class ListSeatsController {
       return response.status(400).json({ error: validationErrors })
     }
 
-    const { seatNumber, time: showDateTime } = request.body
+    const { seatNumber, showDateTime } = request.body
 
     // isso pode ser feito de várias maneiras (resumindo, vou fazer isso depois)
     // Aqui, por exemplo, estamos assumindo que o nome do show é fixo ou vem de outra lógica

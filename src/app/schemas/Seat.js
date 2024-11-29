@@ -25,7 +25,7 @@ const SeatSchema = new mongoose.Schema(
 )
 /** garantir que a combinação de seatNumber e ShowDateTime seja única em cada documento.
  * Isso evitaria reservas duplicadas de assentos para a mesma data.
+ * SeatSchema.index({ seatNumber: 1, showDateTime: 1 }, { unique: true })
  */
-SeatSchema.index({ seatNumber: 1, showDateTime: 1 }, { unique: true })
 
 module.exports = mongoose.model('Seat', SeatSchema)
