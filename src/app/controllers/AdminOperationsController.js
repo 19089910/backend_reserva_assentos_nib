@@ -6,7 +6,7 @@ class AdminOperationsController {
     const schema = Yup.object().shape({
       showName: Yup.string().required(),
       description: Yup.string().required(),
-      dates: Yup.array()
+      /* dates: Yup.array()
         .of(
           Yup.object().shape({
             showDateTime: Yup.date().required(),
@@ -20,7 +20,7 @@ class AdminOperationsController {
               .required(),
           }),
         )
-        .required(),
+        .required(), */
     })
     try {
       await schema.validateSync(request.body, { abortEarly: false })
@@ -36,8 +36,8 @@ class AdminOperationsController {
     // const { admin: isAdmin } = await User.findByPk(request.userId)
     // if (!isAdmin) return response.status(401).json()
 
-    const { showName, description, dates } = request.body
-    console.log(dates)
+    const { showName, description } = request.body
+    const dates = JSON.parse(request.body.dates)
     // request.files contém os uploads processados
     const bannerFile = request.files.banner[0]
     const posterFile = request.files.poster[0]
@@ -51,7 +51,6 @@ class AdminOperationsController {
     }
 
     const showResponse = await Show.create(show)
-    console.log(showResponse)
     return response.status(200).json(showResponse)
   }
 
@@ -73,6 +72,67 @@ class AdminOperationsController {
         error: 'CHAME O PROGRADOR URGENTE PQ NAO ERA PARA VOCE ESTA AQUI!!',
       })
     }
+  }
+
+  async update(request, response) {
+    const schema = Yup.object().shape({
+      showName: Yup.string().required(),
+      description: Yup.string().required(),
+      /* dates: Yup.array()
+        .of(
+          Yup.object().shape({
+            showDateTime: Yup.date().required(),
+            seats: Yup.array()
+              .of(
+                Yup.object().shape({
+                  seatNumber: Yup.string().required(),
+                  isAvailable: Yup.boolean().required(),
+                }),
+              )
+              .required(),
+          }),
+        )
+        .required(), */
+    })
+    try {
+      await schema.validateSync(request.body, { abortEarly: false })
+    } catch (err) {
+      const validationErrors = err.inner.reduce((acc, error) => {
+        acc[error.path] = error.message
+        return acc
+      }, {})
+      return response.status(400).json({ errors: validationErrors })
+    }
+
+    // validação do administrador
+    // const { admin: isAdmin } = await User.findByPk(request.userId)
+    // if (!isAdmin) return response.status(401).json()
+
+    const { id } = request.params
+    const showExist = await Show.findByPk(id)
+    if (!showExist) {
+      return response
+        .status(400)
+        .json({ error: 'Show not found. Please check the ID.' })
+    }
+
+    let bannerPath = showExist.bannerPath // Mantém o valor atual do banco
+    if (request.file && request.file.banner && request.file.banner[0]) {
+      bannerPath = request.file.banner[0] // Se existir novo arquivo, atualiza
+    }
+
+    let postPath = showExist.postPath // Mantém o valor atual do banco
+    if (request.file && request.file.poster && request.file.poster[0]) {
+      postPath = request.file.poster[0] // Se existir novo arquivo, atualiza
+    }
+    const { showName, description } = request.body
+    const dates = JSON.parse(request.body.dates)
+
+    await Show.update(
+      { showName, description, bannerPath, postPath, dates },
+      { where: { id } },
+    )
+    return response.status(200).json()
   }
 }
 
