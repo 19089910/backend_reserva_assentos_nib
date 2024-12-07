@@ -6,8 +6,6 @@ class AdminOperationsController {
     const schema = Yup.object().shape({
       showName: Yup.string().required(),
       description: Yup.string().required(),
-      bannerUrl: Yup.string().url().required(),
-      postUrl: Yup.string().url().required(),
       dates: Yup.array()
         .of(
           Yup.object().shape({
@@ -27,25 +25,33 @@ class AdminOperationsController {
     try {
       await schema.validateSync(request.body, { abortEarly: false })
     } catch (err) {
-      const validationErrors = err.inner.map((e) => e.message)
-      return response.status(400).json({ error: validationErrors })
+      const validationErrors = err.inner.reduce((acc, error) => {
+        acc[error.path] = error.message
+        return acc
+      }, {})
+      return response.status(400).json({ errors: validationErrors })
     }
 
     // validação do administrador
     // const { admin: isAdmin } = await User.findByPk(request.userId)
     // if (!isAdmin) return response.status(401).json()
 
-    const { showName, description, bannerUrl, postUrl, dates } = request.body
+    const { showName, description, dates } = request.body
+    console.log(dates)
+    // request.files contém os uploads processados
+    const bannerFile = request.files.banner[0]
+    const posterFile = request.files.poster[0]
 
     const show = {
       showName,
       description,
-      bannerUrl,
-      postUrl,
+      bannerPath: bannerFile.filename, // Salva apenas o nome do arquivo
+      postPath: posterFile.filename, // Salva apenas o nome do arquivo
       dates,
     }
 
     const showResponse = await Show.create(show)
+    console.log(showResponse)
     return response.status(200).json(showResponse)
   }
 
@@ -68,7 +74,6 @@ class AdminOperationsController {
       })
     }
   }
-  // Aqui viriam as operações de PUT e DELETE que vamos implementar depois.
 }
 
 export default new AdminOperationsController()

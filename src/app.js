@@ -1,5 +1,6 @@
 import express from 'express'
 import router from './routes'
+import { resolve } from 'path'
 import cors from 'cors'
 
 import './database'
@@ -15,6 +16,14 @@ class App {
   middlewares() {
     this.app.use(express.json())
     this.app.use(express.urlencoded({ extended: true }))
+    this.app.use(
+      '/post-file',
+      express.static(resolve(__dirname, '..', 'uploads')),
+    )
+    this.app.use(
+      '/banner-file',
+      express.static(resolve(__dirname, '..', 'uploads')),
+    )
   }
 
   routes() {
