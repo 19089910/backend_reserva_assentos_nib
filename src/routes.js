@@ -31,7 +31,7 @@ router.post(
   AdminOperationsController.store,
 )
 router.get('/shows', AdminOperationsController.index)
-router.post(
+router.put(
   '/shows/:id',
   uploads.fields([
     { name: 'banner', maxCount: 1 },

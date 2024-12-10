@@ -109,28 +109,31 @@ class AdminOperationsController {
     // if (!isAdmin) return response.status(401).json()
 
     const { id } = request.params
-    const showExist = await Show.findByPk(id)
+
+    const showExist = await Show.findOne({ _id: id })
     if (!showExist) {
       return response
         .status(400)
         .json({ error: 'Show not found. Please check the ID.' })
     }
 
-    let bannerPath = showExist.bannerPath // Mantém o valor atual do banco
-    if (request.file && request.file.banner && request.file.banner[0]) {
-      bannerPath = request.file.banner[0] // Se existir novo arquivo, atualiza
+    // Atualizar caminhos de arquivos se novos arquivos forem enviados
+    let bannerPath
+    if (request.files?.banner?.[0]?.filename) {
+      bannerPath = request.files.banner[0].filename
+    }
+    let postPath
+    if (request.files?.poster?.[0]?.filename) {
+      postPath = request.files.poster[0].filename
     }
 
-    let postPath = showExist.postPath // Mantém o valor atual do banco
-    if (request.file && request.file.poster && request.file.poster[0]) {
-      postPath = request.file.poster[0] // Se existir novo arquivo, atualiza
-    }
     const { showName, description } = request.body
     const dates = JSON.parse(request.body.dates)
 
-    await Show.update(
+    await Show.findByIdAndUpdate(
+      id,
       { showName, description, bannerPath, postPath, dates },
-      { where: { id } },
+      { new: true }, // Retorna o novo documento atualizado
     )
     return response.status(200).json()
   }
