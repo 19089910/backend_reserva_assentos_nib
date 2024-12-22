@@ -13,7 +13,7 @@ class ListSeatsController {
       return response.status(400).json({ error: validationErrors })
     }
 
-    const { seatNumber, showDateTime } = request.body
+    const { seatNumber, showDateTime, user } = request.body
 
     // isso pode ser feito de várias maneiras (resumindo, vou fazer isso depois)
     // Aqui, por exemplo, estamos assumindo que o nome do show é fixo ou vem de outra lógica
@@ -32,10 +32,7 @@ class ListSeatsController {
     }
 
     const seatOrder = {
-      user: {
-        id: request.userId,
-        name: request.userName,
-      },
+      user,
       seatNumber,
       showName,
       showDateTime,
@@ -48,8 +45,10 @@ class ListSeatsController {
   async index(request, response) {
     try {
       const seats = await Seat.find() // Busca todos os assentos no banco
+
       const seatData = seats.map((seat) => ({
         _id: seat._id,
+        user: seat.user,
         seatNumber: seat.seatNumber,
         showDateTime: seat.showDateTime,
         updatedAt: seat.updatedAt,
