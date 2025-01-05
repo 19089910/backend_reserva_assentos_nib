@@ -2,15 +2,16 @@ import admin from '../../config/firebaseConfig'
 
 class FirebaseSessionController {
   async store(request, response) {
-    const { idToken } = request.body // O front-end deve enviar o token Firebase recebido após o login
+    const { uid } = request.body // O front-end deve enviar o token Firebase recebido após o login
+    if (!uid) {
+      return response.status(400).json({ message: 'UID é obrigatório' })
+    }
     try {
       // Verifica o token com o Firebase Admin
-      const decodedToken = await admin.auth().verifyIdToken(idToken)
-      const uid = decodedToken.uid
-
-      // Opcional: criar um token JWT próprio para a aplicação
-      const customToken = await admin.auth().createCustomToken(uid)
-      response.json({ customToken })
+      await admin.auth().setCustomUserClaims(uid, { admin: true })
+      return response
+        .status(200)
+        .json({ message: 'Usuário agora é um administrador.' })
     } catch (error) {
       response.status(401).json({ message: 'Autenticação falhou', error })
     }

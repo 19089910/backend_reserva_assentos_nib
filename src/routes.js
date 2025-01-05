@@ -1,23 +1,22 @@
 import { Router } from 'express'
 
-// import UserController from './app/controllers/UserController'
-// import SessionController from './app/controllers/SessionController'
 import ListSeatsController from './app/controllers/ListSeatsController'
 import AdminOperationsController from './app/controllers/AdminOperationsController'
+import FirebaseSessionController from './app/controllers/FirebaseSessionController'
 
 import multer from 'multer'
 import multerConfig from './config/multer'
-// import authMiddleware from './app/middlewares/auth'
+import authMiddleware from './app/middlewares/auth'
 
 const uploads = multer(multerConfig)
 const router = new Router()
-// router.post('/users', UserController.store)
-// router.post('/sessions', SessionController.store)
 
+router.post('/set-admin', FirebaseSessionController.store)
 router.get('/seats', ListSeatsController.index)
+router.get('/shows', AdminOperationsController.index)
 
 // agora todos que tiverem a baixo disso vai passar primeiro pela validação
-// router.use(authMiddleware)
+router.use(authMiddleware)
 
 router.post('/seats', ListSeatsController.store)
 router.delete('/seats/:id', ListSeatsController.delete)
@@ -30,7 +29,7 @@ router.post(
   ]),
   AdminOperationsController.store,
 )
-router.get('/shows', AdminOperationsController.index)
+
 router.put(
   '/shows/:id',
   uploads.fields([
