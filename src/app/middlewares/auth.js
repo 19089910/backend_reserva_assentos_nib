@@ -1,3 +1,6 @@
+/**
+ * SE TORNOU INUTIL POIS FOI TUDO REDENIZADO PELO FRONT E O FIREBASE
+ */
 import admin from '../../config/firebaseConfig'
 
 export default async (request, response, next) => {

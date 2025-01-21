@@ -6,7 +6,7 @@ import FirebaseSessionController from './app/controllers/FirebaseSessionControll
 
 import multer from 'multer'
 import multerConfig from './config/multer'
-import authMiddleware from './app/middlewares/auth'
+// import authMiddleware from './app/middlewares/auth'
 
 const uploads = multer(multerConfig)
 const router = new Router()
@@ -16,7 +16,7 @@ router.get('/seats', ListSeatsController.index)
 router.get('/shows', AdminOperationsController.index)
 
 // agora todos que tiverem a baixo disso vai passar primeiro pela validação
-router.use(authMiddleware)
+// router.use(authMiddleware)
 
 router.post('/seats', ListSeatsController.store)
 router.delete('/seats/:id', ListSeatsController.delete)

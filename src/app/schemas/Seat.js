@@ -7,6 +7,7 @@ const SeatSchema = new mongoose.Schema(
     user: {
       id: { type: String, requered: true },
       name: { type: String, requered: true },
+      email: { type: String, requered: true },
     },
     seatNumber: {
       type: [String], // Array de strings representando assentos, ex: ["A1", "A2", "B3"]
