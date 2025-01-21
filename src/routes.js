@@ -1,3 +1,10 @@
+/**
+ * PRECISA TA FUNCIONADO PARA PROIBIR FAZER QUAL QUER COISA,
+ * TA MUITO SUCETIVEL A HAKERS SEM PROTEÇÃO NEM UMA DE ROTAS
+ * NO FORNT TA OK.
+ */
+// import authMiddleware from './app/middlewares/auth'
+
 import { Router } from 'express'
 
 import ListSeatsController from './app/controllers/ListSeatsController'
@@ -6,7 +13,6 @@ import FirebaseSessionController from './app/controllers/FirebaseSessionControll
 
 import multer from 'multer'
 import multerConfig from './config/multer'
-// import authMiddleware from './app/middlewares/auth'
 
 const uploads = multer(multerConfig)
 const router = new Router()
