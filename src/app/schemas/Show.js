@@ -48,12 +48,14 @@ const ShowSchema = new mongoose.Schema(
 
 // Virtual para a Url
 ShowSchema.virtual('bannerUrl').get(function () {
-  return `http://localhost:3001/banner-file/${this.bannerPath}`
+  // return `http://localhost:3001/banner-file/${this.bannerPath}`
+  return `https://backendreservaassentosnib-production.up.railway.app/banner-file/${this.bannerPath}`
 })
 
 // Virtual para o postUrl
 ShowSchema.virtual('postUrl').get(function () {
-  return `http://localhost:3001/post-file/${this.postPath}`
+  // return `http://localhost:3001/post-file/${this.postPath}`
+  return `https://backendreservaassentosnib-production.up.railway.app/post-file/${this.postPath}`
 })
 
 export default mongoose.model('Show', ShowSchema)
