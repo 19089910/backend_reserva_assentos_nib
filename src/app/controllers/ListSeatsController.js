@@ -44,7 +44,10 @@ class ListSeatsController {
 
   async index(request, response) {
     try {
-      const seats = await Seat.find() // Busca todos os assentos no banco
+      const { email } = request.query
+      const filter = email ? { 'user.email': email } : {}
+
+      const seats = await Seat.find(filter) // Busca todos os assentos no banco
 
       const seatData = seats.map((seat) => ({
         _id: seat._id,
